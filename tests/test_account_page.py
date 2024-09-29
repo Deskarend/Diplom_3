@@ -26,3 +26,27 @@ class TestAccountPage:
         account_page.click_on_exit_button()
 
         account_page.check_is_it_login_page()
+
+    @allure.title('Проверка перехода по кнопке конструктора')
+    @allure.description('При клике по кнопке "Конструктор" в "Личный кабинет" осуществляется переход на главную '
+                        'страницу')
+    def test_click_on_button_constructor(self, drivers, email_and_password_of_account_with_an_order):
+        account_page = AccountPage(drivers)
+        email, password = email_and_password_of_account_with_an_order
+        account_page.go_to_account(email, password)
+
+        account_page.click_on_button_constructor()
+
+        account_page.check_is_it_main_page()
+
+    @allure.title('Проверка перехода по кнопке ленты заказов')
+    @allure.description('При клике по кнопке "Лента Заказов" в "Личный кабинет" осуществляется переход на страницу '
+                        'ленты заказов')
+    def test_click_on_button_order_feed(self, drivers, email_and_password_of_account_with_an_order):
+        account_page = AccountPage(drivers)
+        email, password = email_and_password_of_account_with_an_order
+        account_page.go_to_account(email, password)
+
+        account_page.click_on_button_order_feed()
+
+        account_page.check_is_it_order_feed_page()
