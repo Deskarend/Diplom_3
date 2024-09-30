@@ -1,7 +1,6 @@
 import allure
 from selenium.webdriver.common.by import By
 
-
 from pages.base_page import BasePage
 from pages.login_page import LoginPage
 from pages.main_page import MainPage
@@ -14,6 +13,7 @@ class AccountPage(BasePage):
     ORDER_HISTORY = (By.XPATH, ".//a[contains(@href, '/account/order-history')]")
     ORDER_HISTORY_ACTIVE = (By.XPATH, './/a[contains(@href,"/account/order-history") and contains(@class,'
                                       '"link_active")]')
+    ORDER_NUMBER = (By.XPATH, ".//div[contains(@class, 'textBox')]//p[contains(@class, 'digits')]")
 
     ORDER_HISTORY_LIST = (By.XPATH, './/ul[contains(@class, "OrderHistory_list")]')
 
@@ -30,11 +30,20 @@ class AccountPage(BasePage):
     def click_on_order_history(self):
         self._click_on_element(self.ORDER_HISTORY)
 
-    @allure.step('Проверка на переход во вкладку истории заказов')
-    def check_is_it_order_history(self):
-        assert self._find_element(self.ORDER_HISTORY_ACTIVE), 'Вкладка "История заказов" не активна'
-        assert self._find_element(self.ORDER_HISTORY_LIST), 'Не отображается история заказов'
+    @allure.step('Переход на страницу истории заказов аккаунта')
+    def go_to_account_history(self, email, password):
+        self.go_to_account(email, password)
+        self.click_on_order_history()
 
     @allure.step('Клик на кнопку выхода')
     def click_on_exit_button(self):
         self._click_on_element(self.BUTTON_EXIT)
+
+    @allure.step("Получение номера оформленного заказа")
+    def get_order_number(self):
+        return self._find_element(self.ORDER_NUMBER).text
+
+    @allure.step('Проверка на переход во вкладку истории заказов')
+    def check_is_it_order_history(self):
+        assert self._find_element(self.ORDER_HISTORY_ACTIVE), 'Вкладка "История заказов" не активна'
+        assert self._find_element(self.ORDER_HISTORY_LIST), 'Не отображается история заказов'

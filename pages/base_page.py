@@ -1,3 +1,5 @@
+from random import choice
+
 import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -23,6 +25,9 @@ class BasePage:
 
     def _wait_visibility_of(self, element):
         WebDriverWait(self.driver, self.WAIT_TIME).until(EC.visibility_of_element_located(element))
+
+    def _wait_invisibility_of(self, element):
+        WebDriverWait(self.driver, self.WAIT_TIME).until(EC.invisibility_of_element_located(element))
 
     def _wait_clickable_of(self, element):
         self._wait_visibility_of(element)
@@ -57,6 +62,13 @@ class BasePage:
 
     def _wait_changing_url(self):
         WebDriverWait(self.driver, self.WAIT_TIME).until(EC.url_changes(self.driver.current_url))
+
+    def get_random_component(self, component):
+        random_component = choice(self._find_elements(component))
+        from pages.main_page import MainPage
+        random_component = By.XPATH, (f".//a[contains(@href, '"
+                                      f"{random_component.get_attribute('href')[len(MainPage.URL):]}')]")
+        return random_component
 
     @allure.step('Клик на кнопку «Личный кабинет»')
     def click_on_button_account(self):
@@ -98,3 +110,7 @@ class BasePage:
     @allure.step('Проверка перехода на страницу ленты заказов')
     def check_is_it_order_feed_page(self):
         assert 'feed' in self.driver.current_url, "Переход не на страницу ленты заказов"
+
+    @allure.step('Проверка увеличения счетчика')
+    def check_is_counter_increased(self, new_counter, old_counter):
+        assert new_counter > old_counter, "Счетчик не увеличился"

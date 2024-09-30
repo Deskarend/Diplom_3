@@ -1,5 +1,3 @@
-from random import choice
-
 import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -14,6 +12,8 @@ class MainPage(BasePage):
     random_bun = None
     random_sauce = None
     random_filling = None
+
+    number_random_order = None
 
     URL = "https://stellarburgers.nomoreparties.site/"
 
@@ -36,12 +36,8 @@ class MainPage(BasePage):
 
     ORDER_CONFIRMATION = (By.XPATH,
                           ".//section[contains(@class, 'opened')]//p[contains(text(), 'заказ начали готовить')]")
-
-    def get_random_component(self, component):
-        random_component = choice(self._find_elements(component))
-        random_component = By.XPATH, (f".//a[contains(@href, '"
-                                      f"{random_component.get_attribute('href')[len(MainPage.URL):]}')]")
-        return random_component
+    ORDER_NUMBER = (By.XPATH, ".//p[contains(text(), 'идентификатор')]/preceding-sibling::h2")
+    NOT_UPLOADED_ORDER_NUMBER = (By.XPATH, ".//h2[contains(text(), '9999')]")
 
     @allure.step("Клик по ингредиенту")
     def click_on_ingredient(self, ingredient):
@@ -78,6 +74,17 @@ class MainPage(BasePage):
         action.drag_and_drop(random_bun, basket).perform()
         action.drag_and_drop(random_sauce, basket).perform()
         action.drag_and_drop(random_filling, basket).perform()
+
+    @allure.step("Оформить случайный заказ")
+    def place_random_order(self):
+        self.add_random_burger_on_order()
+        self.click_on_button_place_order()
+        self._wait_invisibility_of(self.NOT_UPLOADED_ORDER_NUMBER)
+        self.number_random_order = self._find_element(self.ORDER_NUMBER).text
+
+    @allure.step("Получение номера оформленного заказа")
+    def get_order_number(self):
+        return self.number_random_order
 
     @allure.step("Клик по крестику в деталях ингредиента")
     def close_ingredient_detail(self):

@@ -72,3 +72,16 @@ class TestMainPage:
         main_page.click_on_button_place_order()
 
         main_page.check_is_order_confirmed()
+
+    @allure.title('Проверка оформления заказа')
+    @allure.description('Залогиненный пользователь может оформить заказ')
+    def test_place_order(self, drivers, email_and_password_of_account_with_an_order):
+        main_page = MainPage(drivers)
+        login_page = LoginPage(drivers)
+        email, password = email_and_password_of_account_with_an_order
+        login_page.login(email, password)
+
+        main_page.add_random_burger_on_order()
+        main_page.click_on_button_place_order()
+
+        main_page.check_is_order_confirmed()
