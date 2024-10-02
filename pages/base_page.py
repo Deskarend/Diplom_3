@@ -11,6 +11,8 @@ class BasePage:
     URL = None
     WAIT_TIME = 5
 
+    OVERLAY = (By.XPATH, "//div[contains(@class, 'Modal_modal_overlay__x2ZCr')]/parent::div")
+
     BUTTON_ACCOUNT = (By.XPATH, ".//a[contains(@href, '/account')]")
 
     BUTTON_CONSTRUCTOR = (By.XPATH, ".//p[contains(text(),'Конструктор')]")
@@ -31,6 +33,7 @@ class BasePage:
 
     def _wait_clickable_of(self, element):
         self._wait_visibility_of(element)
+        self._wait_invisibility_of(self.OVERLAY)
         WebDriverWait(self.driver, self.WAIT_TIME).until(EC.element_to_be_clickable(element))
 
     def _find_element(self, element):
