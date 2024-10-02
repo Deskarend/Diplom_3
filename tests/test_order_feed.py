@@ -1,6 +1,5 @@
 import allure
 
-from pages.account_page import AccountPage
 from pages.login_page import LoginPage
 from pages.main_page import MainPage
 from pages.order_feed import OrderFeed
@@ -19,14 +18,16 @@ class TestOrderFeed:
 
     @allure.title('Проверка отображения заказов пользователя в ленте')
     @allure.description('Недавно оформленный заказ отображается в ленте заказов')
-    def test_is_placed_order_in_feed(self, drivers, email_and_password_of_account_with_an_order):
-        account_page = AccountPage(drivers)
+    def test_is_placed_order_in_feed(self, drivers, email_and_password):
+        main_page = MainPage(drivers)
+        login_page = LoginPage(drivers)
         order_feed = OrderFeed(drivers)
 
-        email, password = email_and_password_of_account_with_an_order
-        account_page.go_to_account_history(email, password)
+        email, password = email_and_password
+        login_page.login(email, password)
 
-        order_number = account_page.get_order_number()
+        main_page.place_random_order()
+        order_number = main_page.get_order_number()
 
         order_feed.open()
 
@@ -34,7 +35,7 @@ class TestOrderFeed:
 
     @allure.title('Проверка увеличения счетчика заказов за все время')
     @allure.description('Счетчик заказов за все время увеличивается при оформлении заказа')
-    def test_increase_total_order_counter(self, drivers, email_and_password_of_account_with_an_order):
+    def test_increase_total_order_counter(self, drivers, email_and_password):
         order_feed = OrderFeed(drivers)
         main_page = MainPage(drivers)
         login_page = LoginPage(drivers)
@@ -42,7 +43,7 @@ class TestOrderFeed:
         order_feed.open()
         order_quantity = order_feed.get_total_order_number()
 
-        email, password = email_and_password_of_account_with_an_order
+        email, password = email_and_password
         login_page.login(email, password)
         main_page.place_random_order()
 
@@ -53,7 +54,7 @@ class TestOrderFeed:
 
     @allure.title('Проверка увеличения счетчика заказов за сегодня')
     @allure.description('Счетчик заказов за сегодня увеличивается при оформлении заказа')
-    def test_increase_today_order_counter(self, drivers, email_and_password_of_account_with_an_order):
+    def test_increase_today_order_counter(self, drivers, email_and_password):
         order_feed = OrderFeed(drivers)
         main_page = MainPage(drivers)
         login_page = LoginPage(drivers)
@@ -61,7 +62,7 @@ class TestOrderFeed:
         order_feed.open()
         order_quantity = order_feed.get_today_order_number()
 
-        email, password = email_and_password_of_account_with_an_order
+        email, password = email_and_password
         login_page.login(email, password)
         main_page.place_random_order()
 
@@ -72,11 +73,11 @@ class TestOrderFeed:
 
     @allure.title('Проверка добавления заказа в готовку')
     @allure.description('После оформления заказа его номер появляется в разделе В работе')
-    def test_is_order_cooking(self, drivers, email_and_password_of_account_with_an_order):
+    def test_is_order_cooking(self, drivers, email_and_password):
         order_feed = OrderFeed(drivers)
         main_page = MainPage(drivers)
         login_page = LoginPage(drivers)
-        email, password = email_and_password_of_account_with_an_order
+        email, password = email_and_password
 
         login_page.login(email, password)
         main_page.place_random_order()

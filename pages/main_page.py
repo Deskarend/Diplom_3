@@ -1,5 +1,4 @@
 import allure
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -53,8 +52,7 @@ class MainPage(BasePage):
         self.random_ingredient = self.get_random_component(self.INGREDIENTS)
         random_ingredient = self._find_element(self.random_ingredient)
         basket = self._find_element(self.BASKET)
-        action = ActionChains(self.driver)
-        action.drag_and_drop(random_ingredient, basket).perform()
+        self._drag_and_drop_element(random_ingredient, basket)
 
     @allure.step("Добавить случайный бургер в заказ")
     def add_random_burger_on_order(self):
@@ -69,11 +67,9 @@ class MainPage(BasePage):
 
         basket = self._find_element(self.BASKET)
 
-        action = ActionChains(self.driver)
-
-        action.drag_and_drop(random_bun, basket).perform()
-        action.drag_and_drop(random_sauce, basket).perform()
-        action.drag_and_drop(random_filling, basket).perform()
+        self._drag_and_drop_element(random_bun, basket)
+        self._drag_and_drop_element(random_sauce, basket)
+        self._drag_and_drop_element(random_filling, basket)
 
     @allure.step("Оформить случайный заказ")
     def place_random_order(self):

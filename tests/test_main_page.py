@@ -6,12 +6,12 @@ from pages.main_page import MainPage
 
 class TestMainPage:
     @allure.title('Переход на страницу личного кабинета по кнопке «Личный кабинет»')
-    @allure.description('При авторизации и  клике по кнопке "Личный кабинет" осуществляется переход на страницу '
+    @allure.description('При авторизации и клике по кнопке "Личный кабинет" осуществляется переход на страницу '
                         'личного кабинета')
-    def test_click_on_button_account(self, drivers, email_and_password_of_account_with_an_order):
+    def test_click_on_button_account(self, drivers, email_and_password):
         login_page = LoginPage(drivers)
         main_page = MainPage(drivers)
-        email, password = email_and_password_of_account_with_an_order
+        email, password = email_and_password
         login_page.login(email, password)
 
         main_page.click_on_button_account()
@@ -52,7 +52,7 @@ class TestMainPage:
 
     @allure.title('Проверка увеличения счетчика ингредиента')
     @allure.description('при добавлении ингредиента в заказ счётчик этого ингредиента увеличивается')
-    def test_increase_ingredient_counter(self, drivers):
+    def test_is_ingredient_counter_increased(self, drivers):
         main_page = MainPage(drivers)
         main_page.open()
 
@@ -62,23 +62,10 @@ class TestMainPage:
 
     @allure.title('Проверка оформления заказа')
     @allure.description('Залогиненный пользователь может оформить заказ')
-    def test_place_order(self, drivers, email_and_password_of_account_with_an_order):
+    def test_place_order(self, drivers, email_and_password):
         main_page = MainPage(drivers)
         login_page = LoginPage(drivers)
-        email, password = email_and_password_of_account_with_an_order
-        login_page.login(email, password)
-
-        main_page.add_random_burger_on_order()
-        main_page.click_on_button_place_order()
-
-        main_page.check_is_order_confirmed()
-
-    @allure.title('Проверка оформления заказа')
-    @allure.description('Залогиненный пользователь может оформить заказ')
-    def test_place_order(self, drivers, email_and_password_of_account_with_an_order):
-        main_page = MainPage(drivers)
-        login_page = LoginPage(drivers)
-        email, password = email_and_password_of_account_with_an_order
+        email, password = email_and_password
         login_page.login(email, password)
 
         main_page.add_random_burger_on_order()

@@ -1,10 +1,10 @@
 from random import choice
 
 import allure
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from seletools.actions import drag_and_drop
 
 
 class BasePage:
@@ -42,8 +42,7 @@ class BasePage:
 
     def _scroll_to(self, element):
         web_element = self._find_element(element)
-        action = ActionChains(self.driver)
-        action.scroll_to_element(web_element).perform()
+        self.driver.execute_script("arguments[0].scrollIntoView();", web_element)
 
     def _click_on_element(self, element):
         self._scroll_to(element)
@@ -82,6 +81,10 @@ class BasePage:
     def click_on_button_order_feed(self):
         self._click_on_element(self.BUTTON_ORDER_FEED)
 
+    @allure.step('Перетащить элемент')
+    def _drag_and_drop_element(self, element, target):
+        drag_and_drop(self.driver, element, target)
+
     @allure.step('Проверка перехода на страницу восстановление пароля')
     def check_is_it_forgot_password_page(self):
         assert 'forgot-password' in self.driver.current_url, "Переход не на страницу восстановления пароля"
@@ -99,7 +102,6 @@ class BasePage:
 
     @allure.step('Проверка перехода в "Личный кабинет"')
     def check_is_it_account_page(self):
-        self._wait_changing_url()
         assert 'account' in self.driver.current_url, "Переход не в личный кабинет"
 
     @allure.step('Проверка перехода на страницу авторизации')

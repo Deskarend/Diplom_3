@@ -10,22 +10,20 @@ class TestForgotPassword:
     @allure.title('Переход на форму восстановления пароля по кнопке «Восстановить»')
     @allure.description('При вводе почты и клике по кнопке "Восстановить" осуществляется переход на форму '
                         'восстановления пароля ')
-    def test_click_on_button_reset(self, drivers):
+    def test_click_on_button_reset(self, drivers, random_email):
         forgot_password = ForgotPassword(drivers)
         forgot_password.open()
-        email = fake.email()
 
-        forgot_password.set_email(email)
+        forgot_password.set_email(random_email)
         forgot_password.click_on_button_reset()
 
-        forgot_password.check_are_fields_new_password_and_email_code_displayed()
+        forgot_password.check_is_it_reset_password_form()
 
     @allure.title('Клик по кнопке показать/скрыть пароль подсвечивает его')
     @allure.description('Клик по кнопке показать/скрыть пароль делает поле активным — подсвечивает его')
-    def test_click_on_button_show_or_hide_password(self, drivers):
+    def test_click_on_button_show_or_hide_password(self, drivers, random_email):
         forgot_password = ForgotPassword(drivers)
-        email = fake.email()
-        forgot_password.go_to_form_reset_password(email)
+        forgot_password.go_to_form_reset_password(random_email)
 
         forgot_password.click_on_button_show_or_hide_password()
 

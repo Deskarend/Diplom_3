@@ -48,8 +48,9 @@ class OrderFeed(BasePage):
 
     @allure.step("Проверка наличия заказа в ленте")
     def check_is_order_in_feed(self, order_number):
-        order_numbers = [number.text for number in self._find_elements(self.ORDER_NUMBERS)]
-        assert order_number in order_numbers, "Заказ в ленте отсутствует"
+        order_numbers = [number.text[2:] for number in self._find_elements(self.ORDER_NUMBERS)]
+
+        assert str(order_number) in order_numbers, "Заказ в ленте отсутствует"
 
     @allure.step("Проверка наличия заказа в ленте")
     def check_is_order_cooking(self, order_number):

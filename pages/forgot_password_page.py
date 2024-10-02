@@ -25,7 +25,7 @@ class ForgotPassword(BasePage):
         self._set_value_to_field(self.FIELD_EMAIL, email)
 
     @allure.step('Проверка отображения полей "Пароль" и "Введите код из письма"')
-    def check_are_fields_new_password_and_email_code_displayed(self):
+    def check_is_it_reset_password_form(self):
         assert self._find_element(self.FIELD_NEW_PASSWORD).is_displayed(), 'Поле "Пароль не отображается"'
         assert self._find_element(self.FIELD_EMAIL_CODE).is_displayed(), 'Поле "Введите код из письма"'
 
@@ -34,7 +34,7 @@ class ForgotPassword(BasePage):
         self.open()
         self.set_email(email)
         self.click_on_button_reset()
-        self.check_are_fields_new_password_and_email_code_displayed()
+        self.check_is_it_reset_password_form()
 
     @allure.step('Нажать на кнопку показать/скрыть пароль')
     def click_on_button_show_or_hide_password(self):
