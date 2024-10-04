@@ -1,22 +1,18 @@
 from random import choice
 
 import allure
-from selenium.webdriver.common.by import By
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from seletools.actions import drag_and_drop
+
+import data
+from locators.base_page_locators import BasePageLocators
 
 
 class BasePage:
     URL = None
     WAIT_TIME = 5
-
-    OVERLAY = (By.XPATH, "//div[contains(@class, 'Modal_modal_overlay__x2ZCr')]/parent::div")
-
-    BUTTON_ACCOUNT = (By.XPATH, ".//a[contains(@href, '/account')]")
-
-    BUTTON_CONSTRUCTOR = (By.XPATH, ".//p[contains(text(),'Конструктор')]")
-    BUTTON_ORDER_FEED = (By.XPATH, ".//p[contains(text(),'Лента Заказов')]")
 
     def __init__(self, driver):
         self.driver = driver
@@ -33,7 +29,7 @@ class BasePage:
 
     def _wait_clickable_of(self, element):
         self._wait_visibility_of(element)
-        self._wait_invisibility_of(self.OVERLAY)
+        self._wait_invisibility_of(BasePageLocators.OVERLAY)
         WebDriverWait(self.driver, self.WAIT_TIME).until(EC.element_to_be_clickable(element))
 
     def _find_element(self, element):
@@ -67,22 +63,20 @@ class BasePage:
 
     def get_random_component(self, component):
         random_component = choice(self._find_elements(component))
-        from pages.main_page import MainPage
-        random_component = By.XPATH, (f".//a[contains(@href, '"
-                                      f"{random_component.get_attribute('href')[len(MainPage.URL):]}')]")
+        random_component = BasePageLocators.get_random_component_locator(random_component)
         return random_component
 
     @allure.step('Клик на кнопку «Личный кабинет»')
     def click_on_button_account(self):
-        self._click_on_element(self.BUTTON_ACCOUNT)
+        self._click_on_element(BasePageLocators.BUTTON_ACCOUNT)
 
     @allure.step('Клик на кнопку «Конструктор»')
     def click_on_button_constructor(self):
-        self._click_on_element(self.BUTTON_CONSTRUCTOR)
+        self._click_on_element(BasePageLocators.BUTTON_CONSTRUCTOR)
 
     @allure.step('Клик на кнопку «Лента Заказов»')
     def click_on_button_order_feed(self):
-        self._click_on_element(self.BUTTON_ORDER_FEED)
+        self._click_on_element(BasePageLocators.BUTTON_ORDER_FEED)
 
     @allure.step('Перетащить элемент')
     def _drag_and_drop_element(self, element, target):
@@ -94,14 +88,12 @@ class BasePage:
 
     @allure.step('Проверка перехода на главную страницу ')
     def check_is_it_main_page(self):
-        from pages.main_page import MainPage
-        assert self.driver.current_url == MainPage.URL, "Переход не на главную страницу"
+        assert self.driver.current_url == data.PageUrls.MAIN_PAGE_URL, "Переход не на главную страницу"
 
     @allure.step('Проверка перехода на главную страницу после авторизации')
     def check_is_it_main_page_with_authorization(self):
         self._wait_changing_url()
-        from pages.main_page import MainPage
-        assert self._find_element(MainPage.BUTTON_ORDER).is_displayed(), "Пользователь не авторизован"
+        assert self._find_element(BasePageLocators.BUTTON_ORDER).is_displayed(), "Пользователь не авторизован"
 
     @allure.step('Проверка перехода в "Личный кабинет"')
     def check_is_it_account_page(self):
